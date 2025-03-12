@@ -1,0 +1,114 @@
+{{ define "main" }}
+<article class="post">
+  <header>
+    <h1 class="post-title">{{ .Title }}</h1>
+    <p>{{ .Description }}</p>
+  </header>
+
+  <div class="content">
+    <!-- Group publications by year (extracted from date field) -->
+    {{ $pages := .Pages.ByDate.Reverse }}
+    {{ $years := slice }}
+    {{ range $pages }}
+      {{ $year := 0 }}
+      {{ if .Params.year }}
+        {{ $year = .Params.year }}
+      {{ else if .Date }}
+        {{ $year = .Date.Year }}
+      {{ end }}
+      {{ $years = $years | append $year }}
+    {{ end }}
+    {{ $years = uniq $years }}
+
+    <!-- Your name to highlight -->
+    {{ $myName := "Your Name" }}
+
+    <!-- Display publications by year -->
+    {{ range $years }}
+      {{ $year := . }}
+      <div class="pub-year">
+        <h2>{{ $year }}</h2>
+        <ul class="pub-list">
+          {{ range $pages }}
+            {{ $itemYear := 0 }}
+            {{ if .Params.year }}
+              {{ $itemYear = .Params.year }}
+            {{ else if .Date }}
+              {{ $itemYear = .Date.Year }}
+            {{ end }}
+            {{ if eq $itemYear $year }}
+              <li class="pub-item">
+                <div class="pub-title">
+                  <a href="{{ .Permalink }}">{{ .Title }}</a>
+                </div>
+                <div class="pub-authors">
+                  {{ range $index, $author := .Params.authors }}
+                    {{ if $index }}, {{ end }}
+                    {{ if eq $author $myName }}
+                      <span class="author-highlight">{{ $author }}</span>
+                    {{ else }}
+                      {{ $author }}
+                    {{ end }}
+                  {{ end }}
+                </div>
+                <!-- <div class="pub-journal"> -->
+                <!--   {{ .Params.publication }} -->
+                <!-- </div> -->
+                <!-- <div class="pub-links"> -->
+                <!--   {{ if .Params.doi }} -->
+                <!--   <a href="https://doi.org/{{ .Params.doi }}" target="_blank" rel="noopener">DOI</a> -->
+                <!--   {{ end }} -->
+                <!--   {{ if .Params.url }} -->
+                <!--   <a href="{{ .Params.url }}" target="_blank" rel="noopener">URL</a> -->
+                <!--   {{ end }} -->
+                <!-- </div> -->
+              </li>
+            {{ end }}
+          {{ end }}
+        </ul>
+      </div>
+    {{ end }}
+  </div>
+</article>
+
+<style>
+  .pub-list {
+    padding-left: 0;
+    list-style: none;
+  }
+
+  .pub-item {
+    margin-bottom: 1.5rem;
+  }
+
+  .pub-authors {
+    font-style: italic;
+  }
+
+  .pub-title {
+    font-weight: bold;
+    margin: 0.2rem 0;
+  }
+
+  .pub-journal {
+    font-style: italic;
+    margin-bottom: 0.2rem;
+  }
+
+  .pub-links a {
+    margin-right: 1rem;
+    font-size: 0.9rem;
+  }
+
+  .pub-year {
+    margin-bottom: 2rem;
+  }
+
+  .author-highlight {
+    font-style: normal;
+    font-weight: bold;
+    text-decoration: underline;
+    color: #0066cc;
+  }
+</style>
+{{ end }}

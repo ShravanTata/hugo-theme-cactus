@@ -1,0 +1,45 @@
+{{ define "main" }}
+<article class="post" itemscope itemtype="http://schema.org/ScholarlyArticle">
+  <header>
+    <h1 class="post-title" itemprop="name">{{ .Title }}</h1>
+    <div class="pub-meta">
+      <div class="pub-authors" itemprop="author">
+        {{ range $index, $author := .Params.authors }}
+          {{ if $index }}, {{ end }}{{ $author }}
+        {{ end }}
+      </div>
+      <div class="pub-journal" itemprop="publisher">
+        {{ .Params.publication }}, {{ .Params.year }}
+      </div>
+      <div class="pub-links">
+        {{ if .Params.doi }}
+        <a href="https://doi.org/{{ .Params.doi }}" target="_blank" rel="noopener" itemprop="sameAs">DOI: {{ .Params.doi }}</a>
+        {{ end }}
+        {{ if .Params.url }}
+        <a href="{{ .Params.url }}" target="_blank" rel="noopener">View Online</a>
+        {{ end }}
+      </div>
+    </div>
+  </header>
+
+  <div class="content" itemprop="articleBody">
+    {{ .Content }}
+
+    <!-- Display page resources -->
+    {{ with .Resources }}
+      <div class="pub-resources">
+        <h3>Resources:</h3>
+        <ul>
+          {{ range . }}
+            <li><a href="{{ .RelPermalink }}" target="_blank" rel="noopener">{{ humanize .Name }}</a></li>
+          {{ end }}
+        </ul>
+      </div>
+    {{ end }}
+
+    <div class="back-link">
+      <a href="{{ .Site.BaseURL }}publications/">← Back to all publications</a>
+    </div>
+  </div>
+</article>
+{{ end }}
