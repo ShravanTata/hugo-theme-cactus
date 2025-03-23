@@ -21,7 +21,7 @@
     {{ $years = uniq $years }}
 
     <!-- Your name to highlight -->
-    {{ $myName := "Your Name" }}
+    {{ $myName := .Site.Params.author }}
 
     <!-- Display publications by year -->
     {{ range $years }}
