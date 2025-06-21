@@ -1,0 +1,70 @@
+<div id="commit-message-container" class="commit-message-widget">
+    <h3>Random Commit Message</h3>
+    <div id="commit-message" class="commit-text">
+        Loading commit message...
+    </div>
+    <button id="refresh-commit" class="refresh-btn">Get New Message</button>
+    <footer>
+        <p class="copyright">© 2010-2024 Nick Gerakines</p>
+    </footer>
+</div>
+
+<style>
+.commit-message-widget {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+    text-align: center;
+    font-family: 'Courier New', monospace;
+}
+
+.commit-text {
+    font-size: 16px;
+    color: #495057;
+    font-style: italic;
+    margin: 15px 0;
+    min-height: 24px;
+}
+
+.refresh-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.refresh-btn:hover {
+    background: #0056b3;
+}
+</style>
+
+<script>
+async function fetchCommitMessage() {
+    try {
+        const response = await fetch('https://whatthecommit.com/index.txt');
+        if (response.ok) {
+            const message = await response.text();
+            document.getElementById('commit-message').textContent = message.trim();
+        } else {
+            document.getElementById('commit-message').textContent = 'Failed to load commit message';
+        }
+    } catch (error) {
+        document.getElementById('commit-message').textContent = 'Error loading commit message';
+        console.error('Error fetching commit message:', error);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    fetchCommitMessage();
+
+    document.getElementById('refresh-commit').addEventListener('click', function() {
+        document.getElementById('commit-message').textContent = 'Loading...';
+        fetchCommitMessage();
+    });
+});
+</script>
