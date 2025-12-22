@@ -1,0 +1,137 @@
+{{ $quotesFile := "data/quotes.txt" }}
+{{ $quotes := slice }}
+
+{{ if fileExists $quotesFile }}
+  {{ $content := readFile $quotesFile }}
+  {{ $lines := split $content "\n" }}
+  {{ range $lines }}
+    {{ $line := strings.TrimSpace . }}
+    {{ if and $line (not (hasPrefix $line "#")) }}
+      {{ $parts := split $line "|" }}
+      {{ if ge (len $parts) 2 }}
+        {{ $quote := dict "text" (index $parts 0) "author" (index $parts 1) }}
+        {{ if eq (len $parts) 3 }}
+          {{ $quote = merge $quote (dict "translation" (index $parts 2)) }}
+        {{ end }}
+        {{ $quotes = $quotes | append $quote }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+<div class="quotes-widget" id="quotes-widget">
+  <h3>💭 Quote of the Visit</h3>
+  <div class="quote-content">
+    {{ if $quotes }}
+      {{ $selectedQuote := index $quotes (mod now.Unix (len $quotes)) }}
+      <blockquote class="quote-text">{{ $selectedQuote.text }}</blockquote>
+      <cite class="quote-author">— {{ $selectedQuote.author }}</cite>
+      {{ if $selectedQuote.translation }}
+        <div class="quote-translation">{{ $selectedQuote.translation }}</div>
+      {{ end }}
+    {{ else }}
+      <blockquote class="quote-text">The only true wisdom is in knowing you know nothing.</blockquote>
+      <cite class="quote-author">— Socrates</cite>
+    {{ end }}
+  </div>
+  <button id="next-quote" class="quote-btn">Next Quote</button>
+</div>
+
+<style>
+.quotes-widget {
+  background: rgba(166, 208, 166, 0.85);
+  color: white;
+  border-radius: 12px;
+  padding: 24px;
+  margin: 24px 0;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.quotes-widget h3 {
+  margin-top: 0;
+  font-size: 1.2em;
+  opacity: 0.9;
+}
+
+.quote-content {
+  margin: 20px 0;
+}
+
+.quote-text {
+  font-size: 16px;
+  font-style: italic;
+  margin: 0 0 12px 0;
+  padding: 0;
+  border: none;
+  line-height: 1.5;
+  display: block;
+}
+
+.quote-author {
+  display: block;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  opacity: 0.9;
+  margin-bottom: 8px;
+}
+
+.quote-translation {
+  font-size: 15px;
+  opacity: 0.8;
+  font-style: italic;
+  margin-top: 12px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.quote-btn {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.quote-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const quotes = [
+    {{ range $quotes }}
+      {
+        text: {{ .text | jsonify }},
+        author: {{ .author | jsonify }}{{ if .translation }},
+        translation: {{ .translation | jsonify }}{{ end }}
+      },
+    {{ end }}
+  ];
+
+  let currentIndex = {{ mod now.Unix (len $quotes) }};
+
+  function displayQuote(quote) {
+    const container = document.querySelector('.quote-content');
+    const translationHtml = quote.translation ?
+      `<div class="quote-translation">${quote.translation}</div>` : '';
+
+    container.innerHTML = `
+      <blockquote class="quote-text">${quote.text}</blockquote>
+      <cite class="quote-author">— ${quote.author}</cite>
+      ${translationHtml}
+    `;
+  }
+
+  document.getElementById('next-quote').addEventListener('click', function() {
+    currentIndex = (currentIndex + 1) % quotes.length;
+    displayQuote(quotes[currentIndex]);
+  });
+});
+</script>
