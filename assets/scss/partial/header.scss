@@ -6,7 +6,7 @@
   .h1 {
     margin-top: 0;
     margin-bottom: 0;
-    color: $color-text;
+    color: var(--color-text);
     letter-spacing: .01em;
     font-weight: 700;
     font-style: normal;
@@ -35,30 +35,32 @@
     }
   }
   #nav {
-    color: $color-accent-1;
+    color: var(--color-accent-1);
     letter-spacing: .01em;
     font-weight: 200;
     font-style: normal;
-    font-size: .8rem;
+    // font-size: .8rem;
 
     ul {
       margin: 0;
       padding: 0;
       list-style-type: none;
       line-height: 15px;
+      font-size: 0rem;
 
       a {
         margin-right: 15px;
-        color: $color-accent-1;
+        color: var(--color-accent-1);
       }
       a:hover {
-        @include underline(5px, $color-accent-1);
+        @include underline(5px, var(--color-accent-1));
       }
       li {
+        font-size: .8rem;
         display: inline-block;
         margin-right: 15px;
         border-right: 1px dotted;
-        border-color: $color-accent-1;
+        border-color: var(--color-accent-1);
         vertical-align: middle;
       }
       .icon {
