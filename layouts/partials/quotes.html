@@ -20,7 +20,7 @@
 {{ end }}
 
 <div class="quotes-widget" id="quotes-widget">
-  <h3>💭 Quote of the Visit</h3>
+  <!-- <h3>💭 Quote of the Visit</h3> -->
   <div class="quote-content">
     {{ if $quotes }}
       {{ $selectedQuote := index $quotes (mod now.Unix (len $quotes)) }}
@@ -39,19 +39,20 @@
 
 <style>
 .quotes-widget {
-  background: rgba(166, 208, 166, 0.85);
-  color: white;
+  background: var(--color-background-code);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
   border-radius: 12px;
   padding: 24px;
   margin: 24px 0;
   text-align: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .quotes-widget h3 {
   margin-top: 0;
   font-size: 1.2em;
-  opacity: 0.9;
+  color: var(--color-accent-1);
 }
 
 .quote-content {
@@ -66,6 +67,7 @@
   border: none;
   line-height: 1.5;
   display: block;
+  color: var(--color-text);
 }
 
 .quote-author {
@@ -73,23 +75,24 @@
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
-  opacity: 0.9;
+  color: var(--color-meta);
   margin-bottom: 8px;
 }
 
 .quote-translation {
   font-size: 15px;
-  opacity: 0.8;
   font-style: italic;
   margin-top: 12px;
   padding-top: 8px;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text);
+  opacity: 0.8;
 }
 
 .quote-btn {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: transparent;
+  color: var(--color-accent-1);
+  border: 1px solid var(--color-accent-1);
   padding: 8px 16px;
   border-radius: 6px;
   cursor: pointer;
@@ -98,7 +101,8 @@
 }
 
 .quote-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: var(--color-accent-1);
+  color: var(--color-background);
   transform: translateY(-1px);
 }
 </style>
