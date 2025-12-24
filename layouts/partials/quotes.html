@@ -34,7 +34,8 @@
       <cite class="quote-author">— Socrates</cite>
     {{ end }}
   </div>
-  <button id="next-quote" class="quote-btn">Next Quote</button>
+  <button id="prev-quote" class="quote-btn"><<</button>
+  <button id="next-quote" class="quote-btn">>></button>
 </div>
 
 <style>
@@ -135,6 +136,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
   document.getElementById('next-quote').addEventListener('click', function() {
     currentIndex = (currentIndex + 1) % quotes.length;
+    displayQuote(quotes[currentIndex]);
+  });
+  document.getElementById('prev-quote').addEventListener('click', function() {
+    currentIndex = (currentIndex - 1) % quotes.length;
     displayQuote(quotes[currentIndex]);
   });
 });
