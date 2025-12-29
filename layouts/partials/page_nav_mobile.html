@@ -13,7 +13,7 @@
     </div>
 
     {{ if not .Site.Params.tocInline }}
-    <div id="toc-footer" style="display: none">
+    <div id="toc-footer" style="display: none; max-height: 60vh; overflow-y: auto; padding: 1rem;">
       {{ .TableOfContents }}
     </div>
     {{ end }}
