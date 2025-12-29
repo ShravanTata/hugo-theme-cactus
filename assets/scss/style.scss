@@ -54,7 +54,7 @@ body {
 
     &:hover {
       // background-image: linear-gradient(transparent, transparent 4px, var(--color-link) 4px, var(--color-link));
-      text-decoration: underline 1px var(--color-link);      
+      text-decoration: underline 1px var(--color-link);
     }
   }
   a.icon {
@@ -167,8 +167,8 @@ pre {
     font-weight: 800;
     font-size: 0.9em;
     line-height: 1.7;
-    color: #fff;
-    background-color: #8c8c8c;
+    color: var(--color-text);
+    background-color: var(--color-background-code);
     min-width: 60px;
     text-align: center;
     cursor: pointer;
@@ -176,8 +176,8 @@ pre {
   }
 
   .code-copy-btn:hover {
-    background-color: #666;
-    color: #2bbc8a;
+    background-color: var(--color-background-code);
+    color: var(--color-accent-1);
   }
 
   code {
