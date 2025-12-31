@@ -1,0 +1,62 @@
+{{- $group := .Get "group" | default "default" -}}
+
+<div class="tab-pane" data-tab-group="{{ $group }}">
+  <ul class="nav-tabs" role="tablist"></ul>
+  <div class="tab-content">
+    {{ .Inner }}
+  </div>
+</div>
+
+<script>
+(function() {
+  const pane = document.currentScript.previousElementSibling;
+  const tabs = pane.querySelectorAll('.tab-pane-item');
+  const navTabs = pane.querySelector('.nav-tabs');
+
+  function syncAllTabs(selectedName) {
+    // Find all tab panes on the page
+    document.querySelectorAll('.tab-pane').forEach(function(otherPane) {
+      const otherTabs = otherPane.querySelectorAll('.tab-pane-item');
+      const otherButtons = otherPane.querySelectorAll('.nav-link');
+
+      otherTabs.forEach(function(tab, idx) {
+        if (tab.dataset.name === selectedName) {
+          // Deactivate all
+          otherButtons.forEach(b => b.classList.remove('active'));
+          otherTabs.forEach(t => t.classList.remove('active'));
+
+          // Activate matching tab
+          otherButtons[idx].classList.add('active');
+          tab.classList.add('active');
+        }
+      });
+    });
+  }
+
+  // Create tab buttons from tab items
+  tabs.forEach((tab, index) => {
+    const name = tab.dataset.name || `Tab ${index + 1}`;
+
+    const li = document.createElement('li');
+    li.className = 'nav-item';
+
+    const button = document.createElement('button');
+    button.className = 'nav-link' + (index === 0 ? ' active' : '');
+    button.textContent = name;
+    button.setAttribute('role', 'tab');
+
+    button.addEventListener('click', function() {
+      // Sync all tabpanes with matching name
+      syncAllTabs(name);
+    });
+
+    li.appendChild(button);
+    navTabs.appendChild(li);
+  });
+
+  // Activate first tab
+  if (tabs.length > 0) {
+    tabs[0].classList.add('active');
+  }
+})();
+</script>
