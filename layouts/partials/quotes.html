@@ -20,14 +20,13 @@
 {{ end }}
 
 <div class="quotes-widget" id="quotes-widget">
-  <!-- <h3>💭 Quote of the Visit</h3> -->
   <div class="quote-content">
     {{ if $quotes }}
       {{ $selectedQuote := index $quotes (mod now.Unix (len $quotes)) }}
-      <blockquote class="quote-text">{{ $selectedQuote.text }}</blockquote>
+      <blockquote class="quote-text">{{ $selectedQuote.text | replaceRE "--" "<br>" | safeHTML }}</blockquote>
       <cite class="quote-author">— {{ $selectedQuote.author }}</cite>
       {{ if $selectedQuote.translation }}
-        <div class="quote-translation">{{ $selectedQuote.translation }}</div>
+        <div class="translation">{{ $selectedQuote.translation }}</div>
       {{ end }}
     {{ else }}
       <blockquote class="quote-text">The only true wisdom is in knowing you know nothing.</blockquote>
@@ -39,6 +38,7 @@
 </div>
 
 <style>
+
 .quotes-widget {
   background: var(--color-background-code);
   color: var(--color-text);
@@ -57,18 +57,25 @@
 }
 
 .quote-content {
-  margin: 20px 0;
+    margin: 20px 0;
+}
+
+.quote-text::before,
+.quote-text::after {
+  content: none !important;
+  display: none !important;
 }
 
 .quote-text {
-  font-size: 16px;
-  font-style: italic;
+  font-size: 14px;
+  font-style: normal;
   margin: 0 0 12px 0;
   padding: 0;
   border: none;
   line-height: 1.5;
   display: block;
   color: var(--color-text);
+  quotes: none !important; /* specific for blockquote */
 }
 
 .quote-author {
@@ -81,8 +88,8 @@
 }
 
 .quote-translation {
-  font-size: 15px;
-  font-style: italic;
+  font-size: 14px;
+  font-style: normal;
   margin-top: 12px;
   padding-top: 8px;
   border-top: 1px solid var(--color-border);
@@ -123,15 +130,23 @@ document.addEventListener('DOMContentLoaded', function() {
   let currentIndex = {{ mod now.Unix (len $quotes) }};
 
   function displayQuote(quote) {
-    const container = document.querySelector('.quote-content');
-    const translationHtml = quote.translation ?
-      `<div class="quote-translation">${quote.translation}</div>` : '';
+      const container = document.querySelector('.quote-content');
 
-    container.innerHTML = `
-      <blockquote class="quote-text">${quote.text}</blockquote>
-      <cite class="quote-author">— ${quote.author}</cite>
-      ${translationHtml}
-    `;
+      // --- FIX: Aggressively strip quotes from the start and end of string ---
+      // This regex removes: " or ' or “ or ” or ‘ or ’ or whitespace
+      let cleanText = quote.text.replace(/^["'“‘\s]+|["'”’\s]+$/g, '');
+
+      const formattedText = cleanText.replace(/--/g, '<br>');
+      const formattedTranslation = quote.translation ? quote.translation.replace(/--/g, '<br>') : '';
+
+      const translationHtml = quote.translation ?
+            `<div class="translation">${formattedTranslation}</div>` : '';
+
+      container.innerHTML = `
+    <blockquote class="quote-text">${formattedText}</blockquote>
+    <cite class="quote-author">— ${quote.author}</cite>
+    ${translationHtml}
+  `;
   }
 
   document.getElementById('next-quote').addEventListener('click', function() {
@@ -139,8 +154,8 @@ document.addEventListener('DOMContentLoaded', function() {
     displayQuote(quotes[currentIndex]);
   });
   document.getElementById('prev-quote').addEventListener('click', function() {
-    currentIndex = (currentIndex - 1) % quotes.length;
-    displayQuote(quotes[currentIndex]);
+      currentIndex = (currentIndex - 1 + quotes.length) % quotes.length;
+      displayQuote(quotes[currentIndex]);
   });
 });
 </script>
