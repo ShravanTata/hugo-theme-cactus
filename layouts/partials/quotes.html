@@ -139,12 +139,14 @@ document.addEventListener('DOMContentLoaded', function() {
       const formattedText = cleanText.replace(/--/g, '<br>');
       const formattedTranslation = quote.translation ? quote.translation.replace(/--/g, '<br>') : '';
 
+      let cleanAuthor = quote.author.replace(/^["'“‘\s]+|["'”’\s]+$/g, '');
+
       const translationHtml = quote.translation ?
             `<div class="translation">${formattedTranslation}</div>` : '';
 
       container.innerHTML = `
     <blockquote class="quote-text">${formattedText}</blockquote>
-    <cite class="quote-author">— ${quote.author}</cite>
+    <cite class="quote-author">— ${cleanAuthor}</cite>
     ${translationHtml}
   `;
   }
