@@ -113,3 +113,19 @@ aside > p {
   margin: 0;
   border-radius: 0;
 }
+
+
+/* Visited map container */
+#visited-map-container {
+  margin: 2rem 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  #visited-map-container {
+    height: 400px !important;
+  }
+}
